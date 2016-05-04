@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -16,16 +15,9 @@ import Control.Concurrent.Async
 import Control.Concurrent.QSem
 import Control.Exception
 import Data.Hashable
-import Data.Typeable
 import Haxl.Core
 import JavaScript.Ajax
 import qualified Data.Text as T
-
-data AjaxResponse
-   = AjaxResponse
-   { ar_status :: !Status
-   , ar_body :: !T.Text
-   } deriving (Show, Eq, Typeable)
 
 data AjaxReq a where
     GetRequest :: T.Text -> AjaxReq AjaxResponse
@@ -78,11 +70,8 @@ fetchReq :: ResultVar a -> AjaxReq a -> IO ()
 fetchReq rvar req =
     case req of
         GetRequest url ->
-            withVar $ \run -> sendRequest GET url Nothing Nothing (run rvar)
+            sendRequest GET url Nothing Nothing >>= putSuccess rvar
         PostRequest url body ct ->
-            withVar $ \run -> sendRequest POST url (Just body) (Just ct) (run rvar)
+            sendRequest POST url (Just body) (Just ct) >>= putSuccess rvar
         PutRequest url body ct ->
-            withVar $ \run -> sendRequest PUT url (Just body) (Just ct) (run rvar)
-    where
-        withVar run =
-            run (\v a b -> putSuccess v (AjaxResponse a b))
+            sendRequest PUT url (Just body) (Just ct) >>= putSuccess rvar

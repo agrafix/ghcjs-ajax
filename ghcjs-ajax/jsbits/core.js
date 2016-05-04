@@ -7,7 +7,10 @@
  * @param {string|null} contentType The content type
  * @param {function(number, string)} onComplete success handler
  */
-function ghcjsajax$sendRequest(url, method, requestBody, contentType, onComplete) {
+function ghcjsajax$sendRequest(url, method, requestBody, contentType, cont) {
+    var onComplete = function (status, body) {
+        cont({ "status": status, "body": body });
+    };
     var req = ghcjsajax$createXMLHTTPObject();
     if (!req) {
         onComplete(500, "Browser not supported");

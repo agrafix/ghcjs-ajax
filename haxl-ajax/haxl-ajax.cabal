@@ -19,7 +19,7 @@ library
   build-depends:       base >=4.7 && <5
                      , text
                      , haxl
-                     , ghcjs-ajax
+                     , ghcjs-ajax >=0.2
                      , hashable
                      , async
   default-language:    Haskell2010
