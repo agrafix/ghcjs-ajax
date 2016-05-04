@@ -14,9 +14,8 @@ function ghcjsajax$sendRequest(url, method, requestBody, contentType, onComplete
         return;
     }
     req.open(method, url, true);
-    req.setRequestHeader('User-Agent','XMLHTTP/1.0');
     if (requestBody && contentType) {
-        req.setRequestHeader('Content-type', contentType);
+        req.setRequestHeader('Content-Type', contentType);
     }
     req.onreadystatechange = function () {
         if (req.readyState != 4) {
