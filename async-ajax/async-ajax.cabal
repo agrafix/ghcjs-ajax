@@ -16,7 +16,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     JavaScript.Ajax.Async
   ghc-options:         -Wall
-  build-depends:       base
+  build-depends:       base >=4.7 && <5
                      , async
                      , ghcjs-ajax
                      , text
