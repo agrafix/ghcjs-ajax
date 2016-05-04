@@ -1,7 +1,9 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 module JavaScript.Ajax
-    ( sendRequest, StdMethod(..), Status(..) )
+    ( sendRequest, StdMethod(..), Status(..)
+    , RequestBody, ContentType
+    )
 where
 
 import Network.HTTP.Types.Method
@@ -16,9 +18,12 @@ import GHCJS.Marshal (ToJSVal(..), FromJSVal(..))
 import GHCJS.Foreign.Callback
 #endif
 
+type RequestBody = T.Text
+type ContentType = T.Text
+
 -- | Send an ajax request provided a HTTP-Method, a target url, optional a request
 -- body and content type and a completion callback
-sendRequest :: StdMethod -> T.Text -> Maybe T.Text -> Maybe T.Text -> (Status -> T.Text -> IO ()) -> IO ()
+sendRequest :: StdMethod -> T.Text -> Maybe RequestBody -> Maybe ContentType -> (Status -> T.Text -> IO ()) -> IO ()
 #ifdef __GHCJS__
 sendRequest method url mBody mContentType callback =
     do jsCt <- toJSVal mContentType
