@@ -23,8 +23,6 @@ library
                      , hashable
                      , async
   default-language:    Haskell2010
-  if impl(ghcjs)
-      build-depends:   ghcjs-base
 
 source-repository head
   type:     git
