@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecursiveDo #-}
 module JavaScript.Ajax
     ( sendRequest, StdMethod(..), Status(..)
     , RequestBody, ContentType
@@ -26,14 +27,15 @@ type ContentType = T.Text
 sendRequest :: StdMethod -> T.Text -> Maybe RequestBody -> Maybe ContentType -> (Status -> T.Text -> IO ()) -> IO ()
 #ifdef __GHCJS__
 sendRequest method url mBody mContentType callback =
-    do jsCt <- toJSVal mContentType
-       jsBody <- toJSVal mBody
-       jsCallback <-
-           asyncCallback2 $ \jsStatus jsInnerText ->
-           do status <- mkStatus <$> fromJSValUnchecked jsStatus <*> pure ""
-              text <- fromJSValUnchecked jsInnerText
-              callback status text
-       js_sendRequest (textToJSString url) jsMethod jsBody jsCt jsCallback
+    mdo jsCt <- toJSVal mContentType
+        jsBody <- toJSVal mBody
+        jsCallback <-
+            asyncCallback2 $ \jsStatus jsInnerText ->
+            do status <- mkStatus <$> fromJSValUnchecked jsStatus <*> pure ""
+               text <- fromJSValUnchecked jsInnerText
+               callback status text
+               releaseCallback jsCallback
+        js_sendRequest (textToJSString url) jsMethod jsBody jsCt jsCallback
     where
       jsMethod =
           case method of
