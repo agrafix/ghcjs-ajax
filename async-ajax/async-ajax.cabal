@@ -1,5 +1,5 @@
 name:                async-ajax
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Crossbrowser async AJAX Bindings for GHCJS
 description:         Please see README.md
 homepage:            https://github.com/agrafix/ghcjs-ajax#readme
